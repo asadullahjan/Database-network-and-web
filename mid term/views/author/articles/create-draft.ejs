@@ -19,42 +19,73 @@
     <div class="flex flex-col items-center text-white mb-10">
       <h1 class="text-6xl font-bold">Create Draft Article</h1>
     </div>
-    <div class="bg-white border rounded shadow max-w-6xl w-full mx-auto p-10">
-      <form action="/author/articles/create-draft" method="post" class="space-y-6">
+    <div class="<%= ['bg-white border rounded max-w-6xl w-full mx-auto p-10',
+       errors && Object.keys(errors).length > 0 ? 'shadow-inner shadow-red-600' : 'shadow'].join(' ') %>">
+      <form action=" /author/articles/create-draft" method="post" class="space-y-6">
 
         <!-- Title field -->
         <div class="group relative">
-          <label for="title" class="text-gray-500 absolute -top-3 left-2 bg-white px-1">Title</label>
+          <label for="title" class="text-gray-500 absolute -top-3 left-2 bg-white px-1">Title <span
+              class="text-red-500">
+              *</span></label>
           <input id="title" type="text" name="title" placeholder="Enter your title" required
+            value="<%= formValues.title %>"
             class="rounded w-full p-2 outline-none focus:outline-none border focus:border-sky-600 transition-all duration-300" />
           <!-- <span class="absolute bottom-0 left-0 w-full h-0.5 rounded-full bg-gray-300"></span>
           <span
             class="absolute bottom-0 left-0 w-full h-0.5 rounded-full max-w-0 group-hover:max-w-full group-focus-within:max-w-full transition-all duration-500 bg-sky-600"></span> -->
+          <!-- Error message placeholder -->
+          <% if (errors && errors.title) { %>
+            <p class="text-red-500 text-sm mt-1">
+              <%= errors.title %>
+            </p>
+            <% } %>
         </div>
 
         <!-- Content field -->
         <div class="group relative">
-          <label for="content" class="text-gray-500 absolute -top-3 left-2 bg-white px-1">Content</label>
+          <label for="content" class="text-gray-500 absolute -top-3 left-2 bg-white px-1">Content<span
+              class="text-red-500"> *</span></label>
           <textarea id="content" name="content" placeholder="Enter the content" required
-            class="w-full h-[400px] resize-none rounded p-2 outline-none focus:outline-none border focus:border-sky-600 transition-all duration-300"></textarea><!-- <span class="absolute bottom-0 left-0 w-full h-0.5 rounded-full bg-gray-300"></span>
+            class="w-full h-[400px] resize-none rounded p-2 outline-none focus:outline-none border focus:border-sky-600 transition-all duration-300"><%= formValues.content %></textarea><!-- <span class="absolute bottom-0 left-0 w-full h-0.5 rounded-full bg-gray-300"></span>
           <span
             class="absolute bottom-0 left-0 w-full h-0.5 rounded-full max-w-0 group-hover:max-w-full group-focus-within:max-w-full transition-all duration-500 bg-sky-600"></span> -->
+          <!-- Error message placeholder -->
+          <% if (errors && errors.content) { %>
+            <p class="text-red-500 text-sm mt-1">
+              <%= errors.content %>
+            </p>
+            <% } %>
         </div>
 
         <!-- Tags field -->
         <div class="group relative">
-          <label for="tags" class="text-gray-500 absolute -top-3 left-2 bg-white px-1">Tags</label>
+          <label for="tags" class="text-gray-500 absolute -top-3 left-2 bg-white px-1">Tags<span class="text-red-500">
+              *</span></label>
           <input id="tags" type="text" name="tags" placeholder="e.g., computer science, web development" required
+            value="<%= formValues.tags %>"
             class="w-full rounded p-2 outline-none focus:outline-none border focus:border-sky-600 transition-all duration-300" />
           <!-- <span class="absolute bottom-0 left-0 w-full h-0.5 rounded-full bg-gray-300"></span>
           <span
             class="absolute bottom-0 left-0 w-full h-0.5 rounded-full max-w-0 group-hover:max-w-full group-focus-within:max-w-full transition-all duration-500 bg-sky-600"></span> -->
+          <!-- Error message placeholder -->
+          <% if (errors && errors.tags) { %>
+            <p class="text-red-500 text-sm mt-1">
+              <%= errors.tags %>
+            </p>
+            <% } %>
         </div>
 
-        <!-- Submit button -->
-        <button type="submit"
-          class="mt-6 ml-auto flex bg-blue-500 text-white py-2 px-4 rounded hover:bg-opacity-75 transition duration-300 ease-in-out">Create
-          Draft</button>
+        <% if (errors && errors.general) { %>
+          <p class="text-red-500 text-sm mt-1">
+            <%= errors.general %>
+          </p>
+          <% } %>
+
+            <!-- Submit button -->
+            <button type="submit"
+              class="mt-6 ml-auto flex bg-blue-500 text-white py-2 px-4 rounded hover:bg-opacity-75 transition duration-300 ease-in-out">Create
+              Draft</button>
       </form>
     </div>
   </div>

@@ -1,36 +1,71 @@
-
 -- This makes sure that foreign_key constraints are observed and that errors will be thrown for violations
-PRAGMA foreign_keys=ON;
+PRAGMA foreign_keys = ON;
 
 BEGIN TRANSACTION;
 
 -- Create your tables with SQL commands here (watch out for slight syntactical differences with SQLite vs MySQL)
+CREATE TABLE
+    IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT UNIQUE,
+        email TEXT UNIQUE,
+        password TEXT,
+        blog_title TEXT,
+    );
 
-CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT UNIQUE,
-    email TEXT UNIQUE,
-    password TEXT,
-);
+CREATE TABLE
+    IF NOT EXISTS email_accounts (
+        email_account_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        email_address TEXT NOT NULL,
+        user_id INTEGER, -- the user that the email account belongs to
+        FOREIGN KEY (user_id) REFERENCES users (id)
+    );
 
-CREATE TABLE IF NOT EXISTS email_accounts (
-    email_account_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    email_address TEXT NOT NULL,
-    user_id  INT, --the user that the email account belongs to
-    FOREIGN KEY (user_id) REFERENCES users(user_id)
-);
-
--- Insert default data (if necessary here)
+CREATE TABLE
+    IF NOT EXISTS articles (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT NOT NULL,
+        content TEXT NOT NULL,
+        tags TEXT NOT NULL,
+        likes INTEGER DEFAULT 0,
+        views INTEGER DEFAULT 0,
+        author_id INTEGER NOT NULL,
+        created_on DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updated_on DATETIME DEFAULT CURRENT_TIMESTAMP,
+        published_on DATETIME,
+        FOREIGN KEY (author_id) REFERENCES users (id)
+    );
 
 -- Set up three users
-INSERT INTO users ('user_name') VALUES ('Simon Star');
-INSERT INTO users ('user_name') VALUES ('Dianne Dean');
-INSERT INTO users ('user_name') VALUES ('Harry Hilbert');
+INSERT INTO
+    users (name, email, password)
+VALUES
+    ('Simon Star', 'simon@example.com', 'password1');
+
+INSERT INTO
+    users (name, email, password)
+VALUES
+    ('Dianne Dean', 'dianne@example.com', 'password2');
+
+INSERT INTO
+    users (name, email, password)
+VALUES
+    ('Harry Hilbert', 'harry@example.com', 'password3');
 
 -- Give Simon two email addresses and Diane one, but Harry has none
-INSERT INTO email_accounts ('email_address', 'user_id') VALUES ('simon@gmail.com', 1); 
-INSERT INTO email_accounts ('email_address', 'user_id') VALUES ('simon@hotmail.com', 1); 
-INSERT INTO email_accounts ('email_address', 'user_id') VALUES ('dianne@yahoo.co.uk', 2); 
+INSERT INTO
+    email_accounts (email_address, user_id)
+VALUES
+    ('simon@gmail.com', 1);
+
+INSERT INTO
+    email_accounts (email_address, user_id)
+VALUES
+    ('simon@hotmail.com', 1);
+
+INSERT INTO
+    email_accounts (email_address, user_id)
+VALUES
+    ('dianne@yahoo.co.uk', 2);
 
 COMMIT;
-
