@@ -7,8 +7,10 @@ BEGIN TRANSACTION;
 -- Create your tables with SQL commands here (watch out for slight syntactical differences with SQLite vs MySQL)
 
 CREATE TABLE IF NOT EXISTS users (
-    user_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_name TEXT NOT NULL
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT UNIQUE,
+    email TEXT UNIQUE,
+    password TEXT,
 );
 
 CREATE TABLE IF NOT EXISTS email_accounts (
