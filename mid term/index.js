@@ -76,9 +76,17 @@ app.get("/", (req, res) => {
 const usersRoutes = require("./routes/users");
 app.use("/users", usersRoutes);
 
+function isAuthenticated(req, res, next) {
+  if (req.session && req.session.userId) {
+    return next(); // User is authenticated, proceed to the next middleware/route handler
+  } else {
+    res.redirect("/users/login"); // User is not authenticated, redirect to the login page
+  }
+}
+
 // Add all the route handlers in authorRoutes to the app under the path /author
 const authorRoutes = require("./routes/author");
-app.use("/author", authorRoutes);
+app.use("/author", isAuthenticated, authorRoutes);
 
 // Make the web application listen for HTTP requests
 app.listen(port, () => {

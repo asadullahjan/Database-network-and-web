@@ -1,15 +1,28 @@
 function publishArticle(articleId) {
-  fetch(`/articles/${articleId}/publish`, {
+  fetch(`/author/articles/${articleId}/publish`, {
     method: "PUT",
   })
     .then((response) => {
+      console.log("response", response);
       if (response.ok) {
-        // Optionally update UI or reload articles
+        // Update UI
+        removeArticleFromUI(articleId);
+
+        showPopup("Published article successfully", "success");
       } else {
         // Handle error
+        showPopup("Failed to publish article", "error");
       }
     })
     .catch((error) => {
       console.error("Error publishing article:", error);
     });
+}
+
+function removeArticleFromUI(articleId) {
+  // Assuming each article's DOM element has an id attribute `article-${articleId}`
+  const articleElement = document.getElementById(`article-${articleId}`);
+  if (articleElement) {
+    articleElement.remove();
+  }
 }
