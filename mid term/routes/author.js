@@ -166,8 +166,50 @@ router.post("/articles/create-draft", (req, res, next) => {
   }
 });
 
+router.put("/articles/:articleId/publish", (req, res, next) => {
+  const articleId = req.params.articleId;
+  const query = "UPDATE articles SET published = ? WHERE id = ?";
+  const queryParameters = [currentTime(), articleId];
+
+  global.db.run(query, queryParameters, function (err) {
+    if (err) {
+      // Handle database insertion error
+      return next(err); // Pass the error to the global error handler middleware
+    }
+    res.status(200).send("Article published successfully");
+  });
+});
+
+router.delete("/articles/:articleId", (req, res, next) => {
+  const articleId = req.params.articleId;
+  const query = "DELETE FROM articles WHERE id = ?";
+  const queryParameters = [articleId];
+
+  global.db.run(query, queryParameters, function (err) {
+    if (err) {
+      // Handle database insertion error
+      return next(err); // Pass the error to the global error handler middleware
+    }
+    res.status(200).send("Article deleted successfully");
+  });
+});
+
 router.get("/settings", (req, res, next) => {
+  const user = global.db.get(
+    "SELECT name, email, blog_title FROM users WHERE id = ?",
+    req.session.userId
+  );
+
+  console.log("user", user, req.session.userId, "req.session.userId");
+
   res.render("author/settings.ejs", {
+    formValues: {
+      new_name: user.name,
+      new_email: user.email,
+      new_blog_title: user.blog_title,
+      old_password: "",
+      new_password: "",
+    },
     errors: {},
   });
 });

@@ -1,22 +1,39 @@
-<%- include('header') %>
+<html>
 
-    <main>
-        <!-- Main content of your page -->
-        <div
-            class="h-screen w-[100%] bg-gradient-to-b from-indigo-900 to-cyan-500 flex flex-col items-center justify-center">
-            <h1 class="text-6xl text-white font-bold mb-10">Discover Engaging Content</h1>
-            <div class="flex gap-10 justify-center"> <!-- Adjusted justify-center -->
-                <a href="/articles"
-                    class="w-72 text-white border border-indigo-900 rounded-lg shadow-md hover:bg-indigo-800 hover:border-indigo-800 transition duration-300 ease-in-out flex items-center justify-center text-2xl font-medium py-6 px-8">
-                    Explore Articles
-                </a>
-                <a href="/author"
-                    class="w-72 text-white border border-indigo-900 rounded-lg shadow-md hover:bg-indigo-800 hover:border-indigo-800 transition duration-300 ease-in-out flex items-center justify-center text-2xl font-medium py-6 px-8">
-                    Author Home Page
-                </a>
-            </div>
-        </div>
-    </main>
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/main.css" />
+    <title>Your Website</title>
+    <!-- Include your CSS or other head elements -->
+</head>
+
+<body>
+    <div class="h-screen w-[100%] bg-gradient-to-b from-indigo-900 to-cyan-500 flex flex-col justify-between">
+        <%- include('components/header') %>
+
+            <main>
+                <!-- Main content of your page -->
+                <div class="flex flex-col flex-1 items-center justify-center">
+                    <h1 class="text-6xl text-white font-bold mb-10">Discover Engaging Content</h1>
+                    <div class="flex gap-10 justify-center"> <!-- Adjusted justify-center -->
+                        <a href="/articles"
+                            class="w-72 text-white border border-indigo-900 rounded-lg shadow-md hover:bg-indigo-800 hover:border-indigo-800 transition duration-300 ease-in-out flex items-center justify-center text-2xl font-medium py-6 px-8">
+                            Explore Articles
+                        </a>
+                        <a href="/author"
+                            class="w-72 text-white border border-indigo-900 rounded-lg shadow-md hover:bg-indigo-800 hover:border-indigo-800 transition duration-300 ease-in-out flex items-center justify-center text-2xl font-medium py-6 px-8">
+                            Author Home Page
+                        </a>
+                    </div>
+                </div>
+            </main>
 
 
-    <%- include('footer') %>
+            <%- include('components/footer') %>
+    </div>
+</body>
+
+</html>

@@ -12,78 +12,86 @@
 </head>
 
 <body>
-  <div
-    class="h-screen w-[100%] overflow-y-auto bg-gradient-to-b from-indigo-900 to-cyan-500 flex flex-col items-center pt-20 pb-20">
-    <div class=" flex flex-col items-center text-white mb-10">
-      <h1 class="text-6xl font-bold ">Author Settings</h1>
-      <span class="text-xl text-gray-400">by <span class="font-semibold">Asadullah Jan</span></span>
-    </div>
-    <div class="bg-white border rounded shadow max-w-6xl w-full mx-auto p-10">
-      <form action="/author/settings" method="post" class="space-y-6">
-        <!-- new_name, new_blog_title, new_email, old_password, new_password -->
-        <!-- Author Name field -->
-        <div class="group relative">
-          <label for="new_name" class="text-gray-500 absolute -top-3 left-2 bg-white px-1">Author Name</label>
-          <input id="new_name" type="text" name="new_name" placeholder="Enter your new name"
-            class="rounded w-full p-2 outline-none focus:outline-none border focus:border-sky-600 transition-all duration-300" />
+  <div class="h-screen w-[100%] bg-gradient-to-b from-indigo-900 to-cyan-500 flex flex-col justify-between">
+    <%- include('../components/header') %>
+      <div class="flex flex-col items-center pt-20 pb-20">
+        <div class=" flex flex-col items-center text-white mb-10">
+          <h1 class="text-6xl font-bold ">Author Settings</h1>
+          <span class="text-xl text-gray-400">by <span class="font-semibold">Asadullah Jan</span></span>
         </div>
+        <div class="bg-white border rounded shadow max-w-6xl w-full mx-auto p-10">
+          <form action="/author/settings" method="post" class="space-y-6">
+            <!-- new_name, new_blog_title, new_email, old_password, new_password -->
+            <!-- Author Name field -->
+            <div class="group relative">
+              <label for="new_name" class="text-gray-500 absolute -top-3 left-2 bg-white px-1">Author Name</label>
+              <input id="new_name" type="text" name="new_name" placeholder="Enter your new name"
+                value="<%= formValues.new_name %>"
+                class="rounded w-full p-2 outline-none focus:outline-none border focus:border-sky-600 transition-all duration-300" />
+            </div>
 
-        <!-- Blog Title field -->
-        <div class="group relative">
-          <label for="new_blog_title" class="text-gray-500 absolute -top-3 left-2 bg-white px-1">Blog Title</label>
-          <input id="new_blog_title" type="text" name="new_blog_title" placeholder="Enter your new blog title"
-            class="rounded w-full p-2 outline-none focus:outline-none border focus:border-sky-600 transition-all duration-300" />
+            <!-- Blog Title field -->
+            <div class="group relative">
+              <label for="new_blog_title" class="text-gray-500 absolute -top-3 left-2 bg-white px-1">Blog Title</label>
+              <input id="new_blog_title" type="text" name="new_blog_title" placeholder="Enter your new blog title"
+                value="<%= formValues.new_blog_title %>"
+                class="rounded w-full p-2 outline-none focus:outline-none border focus:border-sky-600 transition-all duration-300" />
+            </div>
+
+            <!-- Email field -->
+            <div class="group relative">
+              <label for="new_email" class="text-gray-500 absolute -top-3 left-2 bg-white px-1">New Email</label>
+              <input id="new_email" type="text" name="new_email" placeholder="Enter your new email"
+                value="<%= formValues.new_email %>"
+                class="rounded w-full p-2 outline-none focus:outline-none border focus:border-sky-600 transition-all duration-300" />
+              <% if (errors && errors.new_email) { %>
+                <p class="text-red-500 text-sm mt-1">
+                  <%= errors.new_email %>
+                </p>
+                <% } %>
+            </div>
+
+            <!-- Old password field -->
+            <div class="group relative">
+              <label for="old_password" d class="text-gray-500 absolute -top-3 left-2 bg-white px-1">Old
+                password</label>
+              <input id="old_password" type="text" name="old_password" placeholder="Enter your old password"
+                class="rounded w-full p-2 outline-none focus:outline-none border focus:border-sky-600 transition-all duration-300" />
+              <% if (errors && errors.old_password) { %>
+                <p class="text-red-500 text-sm mt-1">
+                  <%= errors.old_password %>
+                </p>
+                <% } %>
+            </div>
+
+            <!-- New password field -->
+            <div class="group relative">
+              <label for="new_password" d class="text-gray-500 absolute -top-3 left-2 bg-white px-1">New
+                password</label>
+              <input id="new_password" type="text" name="new_password" placeholder="Enter your new password"
+                class="rounded w-full p-2 outline-none focus:outline-none border focus:border-sky-600 transition-all duration-300" />
+              <% if (errors && errors.new_password) { %>
+                <p class="text-red-500 text-sm mt-1">
+                  <%= errors.new_password %>
+                </p>
+                <% } %>
+            </div>
+
+            <% if (errors && errors.general) { %>
+              <p class="text-red-500 text-sm mt-1">
+                <%= errors.general %>
+              </p>
+              <% } %>
+
+                <!-- Submit button -->
+                <button type="submit"
+                  class="mt-6 ml-auto flex bg-blue-500 text-white py-2 px-4 rounded hover:bg-opacity-75 transition duration-300 ease-in-out">Update
+                  Settings
+                </button>
+          </form>
         </div>
-
-        <!-- Email field -->
-        <div class="group relative">
-          <label for="new_email" class="text-gray-500 absolute -top-3 left-2 bg-white px-1">New Email</label>
-          <input id="new_email" type="text" name="new_email" placeholder="Enter your new email"
-            class="rounded w-full p-2 outline-none focus:outline-none border focus:border-sky-600 transition-all duration-300" />
-          <% if (errors && errors.new_email) { %>
-            <p class="text-red-500 text-sm mt-1">
-              <%= errors.new_email %>
-            </p>
-            <% } %>
-        </div>
-
-        <!-- Old password field -->
-        <div class="group relative">
-          <label for="old_password" d class="text-gray-500 absolute -top-3 left-2 bg-white px-1">Old password</label>
-          <input id="old_password" type="text" name="old_password" placeholder="Enter your old password"
-            class="rounded w-full p-2 outline-none focus:outline-none border focus:border-sky-600 transition-all duration-300" />
-          <% if (errors && errors.old_password) { %>
-            <p class="text-red-500 text-sm mt-1">
-              <%= errors.old_password %>
-            </p>
-            <% } %>
-        </div>
-
-        <!-- New password field -->
-        <div class="group relative">
-          <label for="new_password" d class="text-gray-500 absolute -top-3 left-2 bg-white px-1">New password</label>
-          <input id="new_password" type="text" name="new_password" placeholder="Enter your new password"
-            class="rounded w-full p-2 outline-none focus:outline-none border focus:border-sky-600 transition-all duration-300" />
-          <% if (errors && errors.new_password) { %>
-            <p class="text-red-500 text-sm mt-1">
-              <%= errors.new_password %>
-            </p>
-            <% } %>
-        </div>
-
-        <% if (errors && errors.general) { %>
-          <p class="text-red-500 text-sm mt-1">
-            <%= errors.general %>
-          </p>
-          <% } %>
-
-            <!-- Submit button -->
-            <button type="submit"
-              class="mt-6 ml-auto flex bg-blue-500 text-white py-2 px-4 rounded hover:bg-opacity-75 transition duration-300 ease-in-out">Update
-              Settings
-            </button>
-      </form>
-    </div>
+      </div>
+      <%- include('../components/footer') %>
   </div>
 </body>
 

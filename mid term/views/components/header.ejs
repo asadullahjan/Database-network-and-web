@@ -1,0 +1,30 @@
+<header>
+    <!-- Your header content here -->
+    <!-- <h1>Welcome to My Website</h1> -->
+    <% const linkStyle="text-blue-500 hover:underline" ; %>
+        <nav class="flex justify-between items-center px-8 pt-4">
+            <a href="/" class="<%= linkStyle %>">Home</a>
+            <div class="flex gap-6 items-center">
+                <a href="/articles" class="<%= linkStyle %>">Articles</a>
+                <a href="/authors" class="<%= linkStyle %>">Authors</a>
+            </div>
+            <% if (user) { %>
+                <div class="relative">
+                    <button onclick="this.nextElementSibling.classList.toggle('hidden')"
+                        class="h-10 w-10 flex justify-center items-center rounded-full bg-white text-black font-semibold">
+                        <span>
+                            <%= 'asad' [0].toUpperCase() %>
+                        </span>
+                    </button>
+                    <div class="absolute top-12 right-0 bg-white shadow-md rounded-lg py-2 hidden">
+                        <% const dropDownLinkStyle="block px-6 py-2 text-black hover:bg-gray-100" ; %>
+                            <a href="/author/settings" class="<%= dropDownLinkStyle %>">Settings</a>
+                            <a href="/author/profile" class="<%= dropDownLinkStyle %>">Profile</a>
+                            <a href="/users/logout" class="<%= dropDownLinkStyle %>">Logout</a>
+                    </div>
+                </div>
+                <% } else { %>
+                    <a href="/users/login" class="<%= linkStyle %>">Login</a>
+                    <% } %>
+        </nav>
+</header>

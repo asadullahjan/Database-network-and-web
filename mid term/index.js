@@ -33,6 +33,27 @@ app.use(
   })
 );
 
+// Middleware to fetch user data for all requests
+app.use((req, res, next) => {
+  if (req.session.userId) {
+    db.get(
+      "SELECT * FROM users WHERE id = ?",
+      [req.session.userId],
+      (err, user) => {
+        if (err || !user) {
+          res.locals.user = null;
+        } else {
+          res.locals.user = user;
+        }
+        next();
+      }
+    );
+  } else {
+    res.locals.user = null;
+    next();
+  }
+});
+
 // Set up SQLite
 // Items in the global namespace are accessible throught out the node application
 const sqlite3 = require("sqlite3").verbose();
