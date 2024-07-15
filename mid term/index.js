@@ -88,7 +88,10 @@ const isAdmin = (req, res, next) => {
   if (res.locals.user?.role === "ADMIN") {
     next(); // User is admin, proceed to the next middleware or route handler
   } else {
-    res.status(401).send("Unauthorized"); // User is not authorized
+    res.render("error", {
+      url: req.url,
+      errorMessage: "Unauthorized",
+    }); // Render an error page if user is not an admin
   }
 };
 

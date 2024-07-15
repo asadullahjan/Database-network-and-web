@@ -116,6 +116,11 @@ router.post("/:userId/update-role", async (req, res, next) => {
     return;
   }
 
+  if (user.id == userId) {
+    res.status(400).send("You cannot update your own role");
+    return;
+  }
+
   const query = "UPDATE users SET role = ? WHERE id = ?";
   const queryParameters = [role, userId];
 
@@ -144,7 +149,12 @@ router.delete("/:userId/delete", async (req, res, next) => {
     res.status(403).send("You do not have permission to update user roles");
     return;
   }
-  
+
+  if (user.id == userId) {
+    res.status(400).send("You cannot delete yourself");
+    return;
+  }
+
   const query = "DELETE FROM users WHERE id = ?";
   const queryParameters = [userId];
 

@@ -131,7 +131,7 @@
   function removeUser(userId) {
     console.log(`User removed: ${userId}`);
     // Implement the user removal logic here, such as sending a request to the server
-    fetch(`/users/${userId}/remove`, {
+    fetch(`/users/${userId}/delete`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'

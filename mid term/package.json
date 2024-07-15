@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build-db": "cat db_schema.sql | sqlite3 database.db",
-    "clean-db": "rm database.db #remove the old database",
+    "clean-db": "rm database.db",
     "build-db-win": "sqlite3 database.db < db_schema.sql",
     "clean-db-win": "del database.db",
     "start": "npm run build-css && node index.js",

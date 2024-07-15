@@ -50,16 +50,9 @@ CREATE TABLE
     );
 
 -- Set up three users
-INSERT
-OR IGNORE INTO users (name, email, password, role, blog_title)
+INSERT OR IGNORE INTO users (name, email, password, role, blog_title)
 VALUES
-    (
-        'Admin',
-        'admin@example.com',
-        '$2b$10$foUywwQTDoY8PkgMiriNm.lT56XPKtdtgH4sNjdOVFGZ46jbhvssa',
-        'ADMIN',
-        'Admin Blog'
-    ),
-    --password is a3CTr2E9APfAmQb
+    ('Admin', 'admin@example.com', '$2b$10$foUywwQTDoY8PkgMiriNm.lT56XPKtdtgH4sNjdOVFGZ46jbhvssa', 'ADMIN', 'Admin Blog');
+--password is a3CTr2E9APfAmQb
 
 COMMIT;
