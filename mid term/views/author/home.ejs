@@ -8,16 +8,20 @@
     rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="/main.css" />
   <title>Author home page</title>
-  <!-- Include your CSS or other head elements -->
 </head>
 
 <body>
   <div class="h-screen w-[100%] bg-gradient-to-b from-indigo-900 to-cyan-500 flex flex-col justify-between">
-    <%- include('../components/header') %>
+    <%- include('../components/header',{ backLink : '/' }) %>
       <div class="flex flex-col items-center justify-center">
         <div class=" flex flex-col items-center text-white mb-10">
-          <h1 class="text-6xl font-bold ">Author Dashboard</h1>
-          <span class="text-xl text-gray-400">by <span class="font-semibold">Asadullah Jan</span></span>
+          <h1 class="text-6xl font-bold mb-2">Author Dashboard</h1>
+          <h2 class="text-2xl font-semibold">
+            <%= user.blog_title %>
+          </h2>
+          <span class="text-xl text-gray-400">by <span class="font-semibold">
+              <%= user.name %>
+            </span></span>
         </div>
         <div class="flex gap-10 justify-center"> <!-- Adjusted justify-center -->
           <a href="/author/articles/published"

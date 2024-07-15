@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <link rel="stylesheet" type="text/css" href="/main.css" />
+  <script src="/actions/delete-article.js" defer></script>
+  <script src="/actions/show-popup.js" defer></script>
+  <script src="/actions/copy-link.js" defer></script>
+  <title>Articles page</title>
+</head>
+
+<body>
+  <div
+    class="h-screen w-[100%] bg-gradient-to-b from-indigo-900 to-cyan-500 flex flex-col justify-between overflow-auto">
+    <%- include('../components/header',{ backLink : '/' }) %>
+      <div class=" flex flex-col items-center pt-20 flex-1">
+        <div class="flex flex-col items-center gap-4 text-white mb-10">
+          <h1 class="text-6xl font-bold ">Articles</h1>
+          <div class="relative flex flex-row gap-2">
+            <input type="search" id="search" placeholder="Search articles" onchange="handleSearch(event)"
+              value="<%= search %>"
+              class="rounded-lg p-2 w-80 bg-white-800 border-white-800 text-indigo-800 focus:outline-none focus:border-sky-600 transition-all duration-300" />
+            <!-- search icon -->
+            <button
+              class="absolute -right-12 top-0 flex justify-center items-center gap-1 text-sm hover:bg-gray-400 hover:bg-opacity-10 rounded-full p-1 h-10 w-10">
+              <span class="material-symbols-outlined text-[20px] cursor-pointer">search</span>
+            </button>
+          </div>
+        </div>
+        <% if (!publishedArticles || publishedArticles.length===0) { %>
+          <div class="text-white text-center mt-20">
+            <p class="text-gray-400 text-md">Sorry, there are no articles to display.</p>
+          </div>
+          <% } %>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 px-24">
+              <% publishedArticles.forEach(article=> { %>
+                <div id="article-<%= article.id %>" class="w-80 h-96 text-white border rounded-lg shadow-md bg-indigo-800 border-indigo-800 transition
+        duration-300 ease-in-out flex flex-col justify-between font-medium py-6 px-5">
+                  <div class="flex flex-col gap-4 h-full">
+                    <div class="flex justify-between gap-1">
+                      <a href="/articles/<%= article.id %>" class="hover:underline">
+                        <h2
+                          class="text-2xl md:text-3xl font-semibold leading-tight overflow-hidden overflow-ellipsis line-clamp-2">
+                          <%= article.title %>
+                        </h2>
+                      </a>
+                      <button
+                        class="flex justify-center items-center gap-1 text-sm hover:bg-gray-400 hover:bg-opacity-10 rounded-full p-1 h-10 w-10">
+                        <span class="material-symbols-outlined text-[20px] cursor-pointer"
+                          onclick="copyLink('<%= protocol %>://<%= host %>/articles/<%= article.id %>')">
+                          content_copy
+                        </span>
+                      </button>
+                    </div>
+                    <div class="flex flex-col gap-2 text-sm">
+                      <p><span class="font-semibold block">Author:</span>
+                        <%= article.author_name %>
+                      </p>
+                      <p><span class="font-semibold block">Blog:</span>
+                        <%= article.blog_title %>
+                      </p>
+                      <p><span class="font-semibold block">Published on:</span>
+                        <%= article.published_on %>
+                      </p>
+                      <p><span class="font-semibold block">Tags:</span>
+                        <% article.tags.split(',').map(tag=> { %>
+                          <span class="text-sm text-gray-400 mr-2">
+                            #<%= tag %>
+                          </span>
+                          <% }) %>
+                      </p>
+                    </div>
+                    <div class="mt-auto">
+                      <span id="likes-count" class="text-gray-400 text-sm mt-2 pr-2 border-r border-gray-400">
+                        <%= article.likes %> likes
+                      </span>
+                      <span class="text-gray-400 text-sm mt-2 pl-2">
+                        <%= article.views %> views
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <% }) %>
+            </div>
+      </div>
+      <%- include('../components/footer') %>
+
+</body>
+
+</html>
+
+<script>
+  function copyLink(link) {
+    navigator.clipboard.writeText(link).then(() => {
+      showPopup('Link copied to clipboard!', 'success');
+    }).catch(err => {
+      console.error('Could not copy link: ', err);
+      showPopup('Failed to copy link.', 'error');
+    });
+  }
+
+  function handleSearch(event) {
+    const search = event.target.value;
+    const windowLocation = window.location.href;
+    const searchParams = new URLSearchParams(windowLocation.search);
+    searchParams.set('search', search);
+    window.location.href = `${windowLocation.split('?')[0]}?${searchParams.toString()}`;
+  }
+</script>

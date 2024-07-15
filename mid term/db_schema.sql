@@ -3,7 +3,6 @@ PRAGMA foreign_keys = ON;
 
 BEGIN TRANSACTION;
 
--- Create your tables with SQL commands here (watch out for slight syntactical differences with SQLite vs MySQL)
 CREATE TABLE
     IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -11,14 +10,8 @@ CREATE TABLE
         email TEXT UNIQUE,
         password TEXT,
         blog_title TEXT,
-    );
-
-CREATE TABLE
-    IF NOT EXISTS email_accounts (
-        email_account_id INTEGER PRIMARY KEY AUTOINCREMENT,
-        email_address TEXT NOT NULL,
-        user_id INTEGER, -- the user that the email account belongs to
-        FOREIGN KEY (user_id) REFERENCES users (id)
+        created_on DATETIME DEFAULT CURRENT_TIMESTAMP,
+        role TEXT NOT NULL DEFAULT 'USER' CHECK (role IN ('USER', 'ADMIN', 'AUTHOR'))
     );
 
 CREATE TABLE
@@ -36,36 +29,37 @@ CREATE TABLE
         FOREIGN KEY (author_id) REFERENCES users (id)
     );
 
+CREATE TABLE
+    IF NOT EXISTS comments (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        content TEXT NOT NULL,
+        article_id INTEGER NOT NULL,
+        user_id INTEGER NOT NULL,
+        created_on DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (article_id) REFERENCES articles (id),
+        FOREIGN KEY (user_id) REFERENCES users (id)
+    );
+
+CREATE TABLE
+    IF NOT EXISTS likes (
+        article_id INTEGER NOT NULL,
+        user_id INTEGER NOT NULL,
+        FOREIGN KEY (article_id) REFERENCES articles (id),
+        FOREIGN KEY (user_id) REFERENCES users (id),
+        PRIMARY KEY (article_id, user_id)
+    );
+
 -- Set up three users
-INSERT INTO
-    users (name, email, password)
+INSERT
+OR IGNORE INTO users (name, email, password, role, blog_title)
 VALUES
-    ('Simon Star', 'simon@example.com', 'password1');
-
-INSERT INTO
-    users (name, email, password)
-VALUES
-    ('Dianne Dean', 'dianne@example.com', 'password2');
-
-INSERT INTO
-    users (name, email, password)
-VALUES
-    ('Harry Hilbert', 'harry@example.com', 'password3');
-
--- Give Simon two email addresses and Diane one, but Harry has none
-INSERT INTO
-    email_accounts (email_address, user_id)
-VALUES
-    ('simon@gmail.com', 1);
-
-INSERT INTO
-    email_accounts (email_address, user_id)
-VALUES
-    ('simon@hotmail.com', 1);
-
-INSERT INTO
-    email_accounts (email_address, user_id)
-VALUES
-    ('dianne@yahoo.co.uk', 2);
+    (
+        'Admin',
+        'admin@example.com',
+        '$2b$10$foUywwQTDoY8PkgMiriNm.lT56XPKtdtgH4sNjdOVFGZ46jbhvssa',
+        'ADMIN',
+        'Admin Blog'
+    ),
+    --password is a3CTr2E9APfAmQb
 
 COMMIT;

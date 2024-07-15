@@ -1,3 +1,4 @@
+
 function deleteArticle(articleId) {
   fetch(`/author/articles/${articleId}`, {
     method: "DELETE",

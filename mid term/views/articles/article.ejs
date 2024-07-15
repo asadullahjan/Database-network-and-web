@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,100,0,0" />
+  <link rel="stylesheet" type="text/css" href="/main.css" />
+  <script src="/actions/show-popup.js" defer></script>
+  <title>Article page</title>
+</head>
+
+<body>
+  <div
+    class="h-screen w-[100%] bg-gradient-to-b from-indigo-900 to-cyan-500 flex flex-col justify-between overflow-auto">
+    <%- include('../components/header',{ backLink : '/articles' }) %>
+      <div class="flex flex-col items-center pt-20 pb-20">
+        <% if (!article) { %>
+          <!-- article not found -->
+          <div class="text-white text-center">
+            <h1 class="text-6xl font-bold">
+              <%= errors.general %>
+            </h1>
+            <p class="text-gray-400 text-xl">Sorry, there was an error loading the article.</p>
+          </div>
+          <% } else { %>
+            <div class="flex flex-col items-center text-white mb-10">
+              <h1 class="text-6xl font-bold">
+                <%= article.blog_title %>
+              </h1>
+              <p class="text-gray-400 text-xl">by <span class="font-semibold">
+                  <%= article.author_name %>
+                </span></p>
+            </div>
+            <div class="flex flex-col bg-white border rounded max-w-6xl min-h-screen w-full mx-auto p-10">
+              <div class="mb-4">
+                <h2 class="text-4xl font-bold">
+                  <%= article.title %>
+                </h2>
+                <% article.tags.split(',').map(tag=> { %>
+                  <span class="text-sm text-gray-400 mr-2">
+                    #<%= tag %>
+                  </span>
+                  <% }) %>
+              </div>
+              <div class="prose max-w-none flex-1">
+                <%- article.content %>
+              </div>
+
+              <% if (errors && errors.general) { %>
+                <p class="text-red-500 text-sm mt-1">
+                  <%= errors.general %>
+                </p>
+                <% } %>
+
+                  <!-- Like Button and Likes Count -->
+                  <div class="flex justify-between mt-8 items-end">
+                    <div>
+                      <span id="likes-count" class="text-gray-400 text-sm mt-2 pr-2 border-r-2">
+                        <%= article.likes %> likes
+                      </span>
+                      <span class="text-gray-400 text-sm mt-2 pl-2">
+                        <%= article.views %> views
+                      </span>
+                      <p class="text-lg font-semibold">
+                        Comments</p>
+                    </div>
+                    <div class="flex justify-end gap-2">
+                      <button id="like-button" onclick="likeArticle('<%= article.id %>')" class="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700
+                        focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition">
+                        <span class="material-symbols-outlined">
+                          thumb_up
+                        </span>
+                        <span>
+                          <%= article.liked ? 'Liked' : 'Like' %>
+                        </span>
+                      </button>
+                      <button onclick="toggleCommentInput('<%= article.id %>')"
+                        class="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition">
+                        <span class="material-symbols-outlined">
+                          comment
+                        </span>
+                        <span>Comment</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Comment Input Section -->
+                  <div id="comment-input-section" class="mt-4 hidden">
+                    <textarea id="comment-input" class="w-full p-2 border rounded"
+                      placeholder="Write your comment..."></textarea>
+                    <button onclick="submitComment('<%= article.id %>')"
+                      class="mt-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition">Submit</button>
+                  </div>
+
+                  <div>
+                    <% if (!article.comments || article.comments?.length===0) { %>
+                      <p class="text-gray-400 text-sm mt-4">No comments yet</p>
+                      <% } %>
+                        <% article?.comments?.map(comment=> { %>
+                          <div class="flex flex-col  mt-2 rounded border p-2">
+                            <p class="text-md font-semibold">
+                              <%= comment.author_name %>
+                            </p>
+                            <p class="text-sm">
+                              <%= comment.content %>
+                            </p>
+                          </div>
+                          <% }) %>
+                  </div>
+            </div>
+            <% } %>
+      </div>
+      <%- include('../components/footer') %>
+  </div>
+</body>
+
+<script>
+  function likeArticle(articleId) {
+    fetch(`/articles/${articleId}/like`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(async (res) => {
+        const message = await res.text();
+        if (res.status === 200) {
+          showPopup(message, 'success');
+          const likeButton = document.getElementById('like-button');
+          likeButton.disabled = true;
+          likeButton.innerHTML = 'Liked';
+          // Update the likes count
+          const likesCountElement = document.getElementById('likes-count');
+          const likesCount = parseInt(likesCountElement.innerText.split(' ')[0], 10);
+          likesCountElement.innerText = `${likesCount + 1} likes`;
+        } else {
+          showPopup(message, 'error');
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        showPopup('Failed to like article', 'error');
+      });
+  }
+
+  function toggleCommentInput(articleId) {
+    const commentInputSection = document.getElementById('comment-input-section');
+    commentInputSection.classList.toggle('hidden');
+    document.getElementById('comment-input').focus();
+  }
+
+  function submitComment(articleId) {
+    const commentContent = document.getElementById('comment-input').value.trim();
+    if (!commentContent) {
+      showPopup('Comment cannot be empty', 'error');
+      return;
+    }
+
+    fetch(`/articles/${articleId}/comment`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ content: commentContent }),
+    })
+      .then(async (res) => {
+        const message = await res.text();
+        if (res.status === 200) {
+          showPopup(message, 'success');
+          // Reload the page to show the new comment
+          location.reload();
+        } else {
+          showPopup(message, 'error');
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        showPopup('Failed to submit comment', 'error');
+      });
+  }
+</script>
+
+</html>

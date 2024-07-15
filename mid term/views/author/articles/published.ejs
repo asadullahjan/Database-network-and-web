@@ -11,30 +11,51 @@
   <link rel="stylesheet" type="text/css" href="/main.css" />
   <script src="/actions/delete-article.js" defer></script>
   <script src="/actions/show-popup.js" defer></script>
+  <script src="/actions/copy-link.js" defer></script>
   <title>Author published articles</title>
-  <!-- Include your CSS or other head elements -->
 </head>
 
 <body>
   <div
     class="h-screen w-[100%] bg-gradient-to-b from-indigo-900 to-cyan-500 flex flex-col justify-between overflow-auto">
-    <%- include('../../components/header') %>
+    <%- include('../../components/header',{ backLink : '/author' }) %>
       <div class=" flex flex-col items-center pt-20">
         <div class=" flex flex-col items-center text-white mb-10">
           <h1 class="text-6xl font-bold ">Published Articles</h1>
-          <span class="text-xl text-gray-400">by <span class="font-semibold">Asadullah Jan</span></span>
+          <span class="text-xl text-gray-400">by <span class="font-semibold">
+              <%= user.name %>
+            </span></span>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 px-24 w-full">
+          <a href="/author/articles/draft/create"
+            class="w-full h-96 text-white border rounded-lg shadow-md bg-indigo-800 border-indigo-800 transition
+          duration-300 ease-in-out flex flex-col justify-center items-center font-medium py-6 px-5 hover:bg-indigo-950 hover:border-indigo-950 hover:shadow-lg">
+            <div class="flex flex-col justify-center items-center">
+              <span class="material-symbols-outlined text-6xl">
+                add
+              </span>
+              <p class="mt-4 text-lg">Create New Article</p>
+            </div>
+          </a>
           <% publishedArticles.forEach(article=> { %>
-            <div id="article-<%=article.id%>" class="w-80 h-96 text-white border rounded-lg shadow-md bg-indigo-800 border-indigo-800 transition
+            <div id="article-<%= article.id %>" class="w-80 h-96 text-white border rounded-lg shadow-md bg-indigo-800 border-indigo-800 transition
           duration-300 ease-in-out flex flex-col justify-between font-medium py-6 px-5">
               <div class="flex flex-col gap-4">
-                <a href="/author/articles/<%= article.id %>/edit" class="hover:underline">
-                  <h2
-                    class="text-2xl md:text-3xl font-semibold leading-tight overflow-hidden overflow-ellipsis line-clamp-2">
-                    <%= article.title %>
-                  </h2>
-                </a>
+                <div class="flex justify-between gap-1">
+                  <a href="/author/articles/<%= article.id %>/edit" class="hover:underline">
+                    <h2
+                      class="text-2xl md:text-3xl font-semibold leading-tight overflow-hidden overflow-ellipsis line-clamp-2">
+                      <%= article.title %>
+                    </h2>
+                  </a>
+                  <button
+                    class="flex justify-center items-center gap-1 text-sm hover:bg-gray-400 hover:bg-opacity-10 rounded-full p-1 h-10 w-10">
+                    <span class="material-symbols-outlined text-[20px] cursor-pointer"
+                      onclick="copyLink('<%= protocol %>://<%= host %>/articles/<%= article.id %>')">
+                      content_copy
+                    </span>
+                  </button>
+                </div>
                 <div class="flex flex-col gap-2 text-sm">
                   <p><span class="font-semibold block">Published on:</span>
                     <%= article.published_on %>
@@ -48,7 +69,7 @@
                 </div>
               </div>
               <div class="flex justify-between items-end">
-                <div class=" flex gap-4">
+                <div class="flex gap-4">
                   <p class="flex items-center gap-1 text-sm"><span class="material-symbols-outlined text-[15px]">
                       visibility
                     </span>
@@ -60,10 +81,14 @@
                     <%= article.likes %>
                   </p>
                 </div>
-                <button onclick="deleteArticle('<%= article.id %>')"
+                <button onclick="showModal('delete-article-<%= article.id %>')"
                   class="text-red-500 rounded-lg hover:text-red-600 hover:underline transition duration-300 ease-in-out">
                   delete
                 </button>
+                <%- include('../../components/dialog',{ dialogId: `delete-article-${article.id}`,
+                  title: 'Delete Article' , message: 'Are you sure you want to delete this article?' ,
+                  confirmActionColor: 'red' , confirmAction: `deleteArticle('${article.id}')`,
+                  confirmActionText: 'Delete' }) %>
               </div>
             </div>
             <% }) %>
@@ -74,3 +99,14 @@
 </body>
 
 </html>
+
+<script>
+  function copyLink(link) {
+    navigator.clipboard.writeText(link).then(() => {
+      showPopup('Link copied to clipboard!', 'success');
+    }).catch(err => {
+      console.error('Could not copy link: ', err);
+      showPopup('Failed to copy link.', 'error');
+    });
+  }
+</script>

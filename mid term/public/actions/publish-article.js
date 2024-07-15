@@ -2,16 +2,17 @@ function publishArticle(articleId) {
   fetch(`/author/articles/${articleId}/publish`, {
     method: "PUT",
   })
-    .then((response) => {
+    .then(async (response) => {
       console.log("response", response);
+      const responseText = await response.text();
       if (response.ok) {
         // Update UI
         removeArticleFromUI(articleId);
 
-        showPopup("Published article successfully", "success");
+        showPopup(responseText, "success");
       } else {
         // Handle error
-        showPopup("Failed to publish article", "error");
+        showPopup(responseText, "error");
       }
     })
     .catch((error) => {

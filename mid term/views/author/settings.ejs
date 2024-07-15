@@ -8,19 +8,19 @@
     rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="/main.css" />
   <title>Author settings page</title>
-  <!-- Include your CSS or other head elements -->
 </head>
 
 <body>
-  <div class="h-screen w-[100%] bg-gradient-to-b from-indigo-900 to-cyan-500 flex flex-col justify-between">
-    <%- include('../components/header') %>
+  <div
+    class="h-screen w-[100%] bg-gradient-to-b from-indigo-900 to-cyan-500 flex flex-col justify-between overflow-auto">
+    <%- include('../components/header',{ backLink : '/author' }) %>
       <div class="flex flex-col items-center pt-20 pb-20">
         <div class=" flex flex-col items-center text-white mb-10">
           <h1 class="text-6xl font-bold ">Author Settings</h1>
           <span class="text-xl text-gray-400">by <span class="font-semibold">Asadullah Jan</span></span>
         </div>
         <div class="bg-white border rounded shadow max-w-6xl w-full mx-auto p-10">
-          <form action="/author/settings" method="post" class="space-y-6">
+          <form action="/author/settings" method="post" class="space-y-6 flex flex-col gap-2">
             <!-- new_name, new_blog_title, new_email, old_password, new_password -->
             <!-- Author Name field -->
             <div class="group relative">
@@ -82,12 +82,17 @@
                 <%= errors.general %>
               </p>
               <% } %>
+                <% if (success && success.general) { %>
+                  <p class="text-green-500 text-sm mt-1">
+                    <%= success.general %>
+                  </p>
+                  <% } %>
 
-                <!-- Submit button -->
-                <button type="submit"
-                  class="mt-6 ml-auto flex bg-blue-500 text-white py-2 px-4 rounded hover:bg-opacity-75 transition duration-300 ease-in-out">Update
-                  Settings
-                </button>
+                    <!-- Submit button -->
+                    <button type="submit"
+                      class="mt-6 ml-auto flex bg-blue-500 text-white py-2 px-4 rounded hover:bg-opacity-75 transition duration-300 ease-in-out">Update
+                      Settings
+                    </button>
           </form>
         </div>
       </div>

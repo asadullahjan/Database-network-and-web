@@ -9,14 +9,13 @@
   <link rel="stylesheet" <link rel="stylesheet" <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,100,0,0" />
   <link rel="stylesheet" type="text/css" href="/main.css" />
-  <title>Author create draft articles</title>
-  <!-- Include your CSS or other head elements -->
+  <title>Author create draft article</title>
 </head>
 
 <body>
   <div
     class="h-screen w-[100%] bg-gradient-to-b from-indigo-900 to-cyan-500 flex flex-col justify-between overflow-auto">
-    <%- include('../../components/header') %>
+    <%- include('../../components/header',{ backLink : '/author/draft' }) %>
       <div class=" flex flex-col items-center pt-20 pb-20">
         <div class="flex flex-col items-center text-white mb-10">
           <h1 class="text-6xl font-bold">Create Draft Article</h1>
